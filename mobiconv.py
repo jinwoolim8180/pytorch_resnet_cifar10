@@ -51,7 +51,7 @@ class MobiConvBlock(nn.Module):
             h = F.upsample(h, scale_factor=size, mode='nearest')
             h *= table
             threshold = self.ratio[0] * torch.mean(h, dim=(-2, -1), keepdim=True)
-            threshold += self.ratio[1] * torch.amin(h, dim=(-2, -1), keepdim=True)
+            threshold += self.ratio[1] * torch.amax(h, dim=(-2, -1), keepdim=True)
             threshold /= self.ratio[0] + self.ratio[1]
             table = torch.sum(torch.ge(h, threshold).float(), dim=1, keepdim=True)
             table += self.n_pruned * torch.ones(N, 1, H // self.stride, W // self.stride).cuda()
